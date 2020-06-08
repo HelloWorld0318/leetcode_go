@@ -1,0 +1,2 @@
+# leetcode_go
+入职Bilibili以后，项目组的开发语言是GO，打算用GO语言刷leetcode，期待自己可以快速熟悉GO语言
