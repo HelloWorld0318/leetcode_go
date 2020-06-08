@@ -17,8 +17,8 @@ func twoSum(nums []int, target int) []int {
 	}
 	for k, v := range nums {
 		temp := target - v
-		val, tag := hash[temp]
-		if tag && val != k {
+		val, ok := hash[temp]
+		if ok && val != k {
 			//tag判断哈希表中是否存在temp键，val！=k避免重复取数
 			result = append(result, k)
 			result = append(result, val)
