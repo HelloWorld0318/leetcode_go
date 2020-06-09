@@ -1,2 +1,2 @@
 # leetcode_go
-入职Bilibili以后，项目组的开发语言是GO，打算用GO语言刷leetcode，期待自己可以快速熟悉GO语言
+入职Bilibili以后，项目组的主开发语言是GO，打算用GO语言刷leetcode，期待自己通过写leetcode的题目快速熟悉GO语言语法
