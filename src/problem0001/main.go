@@ -16,7 +16,7 @@ func main() {
 
 	fmt.Println("============")
 
-	shardInfo, _ := shardDynId(425867834429550682)
+	shardInfo, _ := shardDynId(433238483638707017)
 	fmt.Println("year:",shardInfo.Year)
 	fmt.Println("month:",shardInfo.Month)
 	fmt.Println("rand:",shardInfo.Rand)
