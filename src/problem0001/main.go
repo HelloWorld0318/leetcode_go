@@ -46,6 +46,7 @@ func twoSum(nums []int, target int) []int {
 func shardDynId(dynamicID uint64) (shardInfo *ShardInfo, err error) {
 	ts := (dynamicID >> 32) + _timeStamp20170701
 	tm := time.Unix(int64(ts), 0)
+	fmt.Println("timestamp:", tm)
 	shardInfo = &ShardInfo{
 		Year:  int32(tm.Year()),
 		Month: int32(tm.Month()),
