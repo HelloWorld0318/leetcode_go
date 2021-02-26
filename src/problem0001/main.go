@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"time"
 )
 
@@ -16,7 +17,7 @@ func main() {
 
 	fmt.Println("============")
 
-	shardInfo, _ := shardDynId(433238483638707017)
+	shardInfo, _ := shardDynId(495689773434787503)
 	fmt.Println("year:",shardInfo.Year)
 	fmt.Println("month:",shardInfo.Month)
 	fmt.Println("rand:",shardInfo.Rand)
@@ -28,6 +29,18 @@ func main() {
 	fmt.Println(string(blockUsersBys))
 
 	fmt.Println(len("bk:1:212295231"))
+
+	fmt.Println("--------------------")
+
+	//将时间戳设置成种子数
+	myRand := rand.New(rand.NewSource(time.Now().UnixNano()))
+	//生成10个0-99之间的随机数
+	fmt.Println(myRand.Intn(10))
+
+	fmt.Println("--------------------")
+
+	fmt.Println(7&4)
+
 }
 
 func twoSum(nums []int, target int) []int {
