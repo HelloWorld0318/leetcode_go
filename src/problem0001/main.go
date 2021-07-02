@@ -27,7 +27,7 @@ func main() {
 	}
 	fmt.Println("======================")
 
-	str := "#年轻人做自媒体靠不靠谱# 刚毕业的年轻人，做自媒体到底靠不靠谱？和督工、Kris、冬晓做同事又是怎样的感受？这场“团建”连麦，三位同事和小勺子分享了自己的从业历程和心得感受，小勺子也借着直播问出了许多“得罪人”的麻辣问题（手动狗头）。虽然辛苦，但对这一行的过去、现在和未来，我们有着最真实的爱和憧憬。当然，最重要的一点是：我们在招实习生啦！投递简历hr@guanvideo.com，标题备注“直播”允许面试插队噢！#直观#"
+	str := "test#年轻人做自媒体靠不靠谱# 刚毕业的年轻人，做自媒体到底靠不靠谱？和督工、Kris、冬晓做同事又是怎样的感受？投递简历hr@guanvideo.com，标题备注“直播”允许面试插队噢！#直观#fefexer"
 	fmt.Println("======================", len(str))
 	fmt.Println(string(str[2]))
 	topics, onlyHasTopic, textLen, err := DetectTopicsFromDynamicDesc(str)
@@ -164,10 +164,13 @@ func scan(desc string) (topics []string, onlyHasTopic bool, textLen int32, err e
 		end    int
 		length int
 		state  = DETECT_STATE_RESTART
+
+		textStart int
 	)
 	onlyHasTopic = true
 	desc = removeUrl(desc)
-	textLen = int32(len(desc))
+
+	textArr := make([]string, 0)
 
 	fmt.Println("scan len", textLen)
 	for i := 0; i < len(desc); {
@@ -177,15 +180,15 @@ func scan(desc string) (topics []string, onlyHasTopic bool, textLen int32, err e
 		if state == DETECT_STATE_START_DETECT {
 			start = i + 1
 			length = 0
-			textLen--
+			if textStart < i-1 {
+				textArr = append(textArr, trim(desc[textStart:i]))
+			}
 		}
 		if state == DETECT_STATE_IN_TOPIC {
 			length++
 			if length > 32 {
 				state = DETECT_STATE_RESTART
-				textLen += int32(length)
-			} else {
-				textLen--
+				textStart = i
 			}
 		}
 		if state == DETECT_STATE_END_DETECT {
@@ -198,20 +201,22 @@ func scan(desc string) (topics []string, onlyHasTopic bool, textLen int32, err e
 				start = i + 1
 				length = 0
 			}
-			textLen--
+			textStart = i + 1
+		}
+		if state == DETECT_STATE_RESTART {
+			if i == len(desc)-1 {
+				textArr = append(textArr, trim(desc[textStart:]))
+			}
 		}
 		if c <= 0x7f {
 			i += 1
-			textLen--
 		} else if c < 0xc0 {
 			//err = ecode.DynamicDetectTopicErr
 			return
 		} else if c < 0xe0 {
 			i += 2
-			textLen-=2
 		} else if c < 0xf0 {
 			i += 3
-			textLen-=3
 		} else {
 			if len(desc) < i+4 {
 				//err = ecode.DynamicDetectTopicErr
@@ -234,9 +239,10 @@ func scan(desc string) (topics []string, onlyHasTopic bool, textLen int32, err e
 				state = DETECT_STATE_RESTART
 			}
 			i += 4
-			textLen-=4
 		}
 	}
+
+
 	return
 }
 

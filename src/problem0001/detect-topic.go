@@ -12,4 +12,6 @@ func main() {
 	}
 	fmt.Println(inStr)
 
+	fmt.Println(string(words[4]))
+	fmt.Println(len(name))
 }
