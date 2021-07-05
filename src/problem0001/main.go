@@ -12,7 +12,7 @@ import (
 const _timeStamp20170701 = 1498838400
 
 func main() {
-	fmt.Println("======================")
+/*	fmt.Println("======================")
 
 	fmt.Println(GetHash(31110987))
 
@@ -25,11 +25,11 @@ func main() {
 	for _, item := range arrCombine {
 		fmt.Println(item)
 	}
-	fmt.Println("======================")
+	fmt.Println("======================")*/
 
-	str := "#小豆芽#额分罚恶风"
-	fmt.Println("======================", len(str))
-	fmt.Println(string(str[2]))
+	str := "#小豆芽#测试测试"
+	//fmt.Println("======================", len(str))
+	//fmt.Println(string(str[2]))
 	topics, onlyHasTopic, textLen, err := DetectTopicsFromDynamicDesc(str)
 	fmt.Println(topics)
 	fmt.Println(onlyHasTopic)
@@ -171,14 +171,15 @@ func scan(desc string) (topics []string, onlyHasTopic bool, textLen int32, err e
 	desc = removeUrl(desc)
 
 	textArrExcluedTag := make([]string, 0)
-	for i := 0; i < len(desc); {
+	i := 0
+	for i = 0; i < len(desc); {
 		c := desc[i]
 		state = detect(c, state, &onlyHasTopic)
 
 		if state == DETECT_STATE_START_DETECT {
 			start = i + 1
 			length = 0
-			if textStart < i-1 {
+			if textStart <= i-1 {
 				textArrExcluedTag = append(textArrExcluedTag, trim(desc[textStart:i]))
 			}
 		}
@@ -212,8 +213,16 @@ func scan(desc string) (topics []string, onlyHasTopic bool, textLen int32, err e
 			return
 		} else if c < 0xe0 {
 			i += 2
+			if i == len(desc) && state == DETECT_STATE_RESTART {
+				fmt.Println("i+2")
+				textArrExcluedTag = append(textArrExcluedTag, trim(desc[textStart:]))
+			}
 		} else if c < 0xf0 {
 			i += 3
+			if i == len(desc) && state == DETECT_STATE_RESTART {
+				fmt.Println("i+3")
+				textArrExcluedTag = append(textArrExcluedTag, trim(desc[textStart:]))
+			}
 		} else {
 			if len(desc) < i+4 {
 				return
@@ -235,12 +244,14 @@ func scan(desc string) (topics []string, onlyHasTopic bool, textLen int32, err e
 				state = DETECT_STATE_RESTART
 			}
 			i += 4
-		}
-		if i >= len(desc)-1 {
-			textArrExcluedTag = append(textArrExcluedTag, trim(desc[textStart:]))
+			if i == len(desc) && state == DETECT_STATE_RESTART {
+				fmt.Println("i+4")
+				textArrExcluedTag = append(textArrExcluedTag, trim(desc[textStart:]))
+			}
 		}
 	}
 
+	fmt.Println(textArrExcluedTag)
 	for _, item := range textArrExcluedTag {
 		words := ([]rune)(item)
 		textLen += int32(len(words))
