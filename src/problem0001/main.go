@@ -27,7 +27,7 @@ func main() {
 	}
 	fmt.Println("======================")
 
-	str := "test#年轻人做自媒体靠不靠谱# 刚毕业的年轻人，做自媒体到底靠不靠谱？和督工、Kris、冬晓做同事又是怎样的感受？投递简历hr@guanvideo.com，标题备注“直播”允许面试插队噢！#直观#fefexer"
+	str := "#小豆芽#额分罚恶风#额发#"
 	fmt.Println("======================", len(str))
 	fmt.Println(string(str[2]))
 	topics, onlyHasTopic, textLen, err := DetectTopicsFromDynamicDesc(str)
@@ -170,9 +170,7 @@ func scan(desc string) (topics []string, onlyHasTopic bool, textLen int32, err e
 	onlyHasTopic = true
 	desc = removeUrl(desc)
 
-	textArr := make([]string, 0)
-
-	fmt.Println("scan len", textLen)
+	textArrExcluedTag := make([]string, 0)
 	for i := 0; i < len(desc); {
 		c := desc[i]
 		state = detect(c, state, &onlyHasTopic)
@@ -181,7 +179,7 @@ func scan(desc string) (topics []string, onlyHasTopic bool, textLen int32, err e
 			start = i + 1
 			length = 0
 			if textStart < i-1 {
-				textArr = append(textArr, trim(desc[textStart:i]))
+				textArrExcluedTag = append(textArrExcluedTag, trim(desc[textStart:i]))
 			}
 		}
 		if state == DETECT_STATE_IN_TOPIC {
@@ -205,13 +203,12 @@ func scan(desc string) (topics []string, onlyHasTopic bool, textLen int32, err e
 		}
 		if state == DETECT_STATE_RESTART {
 			if i == len(desc)-1 {
-				textArr = append(textArr, trim(desc[textStart:]))
+				textArrExcluedTag = append(textArrExcluedTag, trim(desc[textStart:]))
 			}
 		}
 		if c <= 0x7f {
 			i += 1
 		} else if c < 0xc0 {
-			//err = ecode.DynamicDetectTopicErr
 			return
 		} else if c < 0xe0 {
 			i += 2
@@ -219,7 +216,6 @@ func scan(desc string) (topics []string, onlyHasTopic bool, textLen int32, err e
 			i += 3
 		} else {
 			if len(desc) < i+4 {
-				//err = ecode.DynamicDetectTopicErr
 				return
 			}
 			isEmoji := false
@@ -240,9 +236,15 @@ func scan(desc string) (topics []string, onlyHasTopic bool, textLen int32, err e
 			}
 			i += 4
 		}
+		if i >= len(desc)-1 {
+			textArrExcluedTag = append(textArrExcluedTag, trim(desc[textStart:]))
+		}
 	}
 
-
+	for _, item := range textArrExcluedTag {
+		words := ([]rune)(item)
+		textLen += int32(len(words))
+	}
 	return
 }
 
