@@ -27,7 +27,7 @@ func main() {
 	}
 	fmt.Println("======================")*/
 
-	str := "#小豆芽#测试测试"
+	str := "#小豆芽#测试纷纷xfessefxefs"
 	//fmt.Println("======================", len(str))
 	//fmt.Println(string(str[2]))
 	topics, onlyHasTopic, textLen, err := DetectTopicsFromDynamicDesc(str)
