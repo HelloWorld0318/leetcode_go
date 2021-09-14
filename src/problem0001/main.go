@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/md5"
+	"encoding/json"
 	"fmt"
 	"regexp"
 	"sort"
@@ -12,29 +13,112 @@ import (
 const _timeStamp20170701 = 1498838400
 
 func main() {
-/*	fmt.Println("======================")
+	/*	fmt.Println("======================")
 
-	fmt.Println(GetHash(31110987))
+		fmt.Println(GetHash(31110987))
 
-	fmt.Println(time.Now().Unix())
-	fmt.Println("======================")
+		fmt.Println(time.Now().Unix())
+		fmt.Println("======================")
 
-	arr := []int64{12,323}
+		arr := []int64{12,323}
 
-	arrCombine := getAllGroupCombile(arr)
-	for _, item := range arrCombine {
-		fmt.Println(item)
-	}
-	fmt.Println("======================")*/
+		arrCombine := getAllGroupCombile(arr)
+		for _, item := range arrCombine {
+			fmt.Println(item)
+		}
+		fmt.Println("======================")*/
 
-	str := "#小豆芽#测试纷纷xfessefxefs"
+	//str := "#小豆芽#测试纷纷xfessefxefs"
 	//fmt.Println("======================", len(str))
 	//fmt.Println(string(str[2]))
-	topics, onlyHasTopic, textLen, err := DetectTopicsFromDynamicDesc(str)
-	fmt.Println(topics)
-	fmt.Println(onlyHasTopic)
-	fmt.Println(textLen)
-	fmt.Println(err)
+	//topics, onlyHasTopic, textLen, err := DetectTopicsFromDynamicDesc(str)
+	//fmt.Println(topics)
+	//fmt.Println(onlyHasTopic)
+	//fmt.Println(textLen)
+	//fmt.Println(err)
+
+	//re:=regexp.MustCompile("[0-9]+")
+
+	//fmt.Println(re.FindAllString("txt_len < 30", 1))
+
+	//exp := "txt_len  30"
+	//regPattern := "[^()|&! +\\-*/%><=?:]+"
+	//regExec := regexp.MustCompile(regPattern)
+	//allStrings := regExec.FindAllString(exp, -1)
+	//fmt.Println(allStrings)
+	//
+	//type TN struct {
+	//	Mid int64
+	//	T1   []int64
+	//}
+	//
+	//s1 := new(TN)
+	//fmt.Println(s1)
+	//str := make([]byte, 0)
+	//json.Unmarshal(str,s1)
+	//
+	//fmt.Println(s1)
+
+	//shardInfo, _ := shardDynId(554972567068676458)
+	//fmt.Println(shardInfo)
+	//
+	//Data := make(map[string]interface{})
+	//Data["topicId"] = int64(1)
+	//
+	//topicCfgInfo := make(map[int64]map[string]interface{})
+	//topicPartitionAndKeywords := make(map[string]interface{})
+	//topicPartitionAndKeywords["topic_keyword_regpattern"] = "item.Keywords"
+	//topicPartitionAndKeywords["topic_name_regpattern"] = "item.NewTopicName"
+	//topicPartitionAndKeywords["topic_first_partition"] = "item.Partitions"
+	//topicCfgInfo[1] = topicPartitionAndKeywords
+	//
+	//
+	//value := ""
+	//score, err1 := strconv.ParseFloat(value, 64)
+	//fmt.Println(score)
+	//fmt.Println(err1)
+
+
+	a := make([]*Stu,0)
+	a = append(a, &Stu{Name: "hjx"})
+
+	stus := &Stus{
+		List: a,
+	}
+	str,_ := json.Marshal(stus)
+	fmt.Println(string(str))
+
+	b := &Stus{}
+
+	json.Unmarshal(str,b)
+	fmt.Println(b.List[0])
+
+	time.Now().Unix()
+
+	fmt.Println("-------------------------------")
+	fmt.Println(PubTime2Time(9235085924561356))
+	fmt.Println(len("100000110011110100101000000000000000001111010001000101"))
+	fmt.Println("-------------------------------")
+
+	stus1 := []*Stu{
+		{Name: "1"}, {Name: "2"}, {Name: "3"},
+	}
+	bys,_ := json.Marshal(stus1)
+	fmt.Println(string(bys))
+
+}
+
+const (
+	PubTimeBaseTime = 1627747200 //2021年08月01日 00:00:00
+)
+
+func PubTime2Time(pubTime int64) int64 {
+	ts := (pubTime >> 32) + PubTimeBaseTime
+	return ts
+}
+
+type Stus struct {
+	List []*Stu `json:"list"`
 }
 
 type Stu struct {
@@ -90,7 +174,6 @@ func GetHash(mid int64) int32 {
 	return int32(h % 10)
 }
 
-
 func getAllGroupCombile(groupTopicIds []int64) (groupIdCombine []string) {
 	//两个话题关联
 	groupIdCombine = make([]string, 0)
@@ -133,8 +216,6 @@ func getAllGroupCombile(groupTopicIds []int64) (groupIdCombine []string) {
 	return
 }
 
-
-
 const (
 	DETECT_STATE_RESTART = iota
 	DETECT_STATE_START_DETECT
@@ -142,7 +223,7 @@ const (
 	DETECT_STATE_END_DETECT
 )
 
-func DetectTopicsFromDynamicDesc(desc string) (topics []string, onlyHasTopic bool,textLen int32, err error) {
+func DetectTopicsFromDynamicDesc(desc string) (topics []string, onlyHasTopic bool, textLen int32, err error) {
 	ts, onlyHasTopic, textLen, err := scan(desc)
 	if err != nil {
 		return
