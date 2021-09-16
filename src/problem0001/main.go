@@ -151,6 +151,7 @@ func shardDynId(dynamicID uint64) (shardInfo *ShardInfo, err error) {
 	return
 }
 
+
 type ShardInfo struct {
 	Year  int32
 	Month int32
