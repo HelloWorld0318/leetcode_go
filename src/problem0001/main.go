@@ -2,10 +2,10 @@ package main
 
 import (
 	"crypto/md5"
-	"encoding/json"
 	"fmt"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -59,9 +59,9 @@ func main() {
 	//
 	//fmt.Println(s1)
 
-	//shardInfo, _ := shardDynId(554972567068676458)
-	//fmt.Println(shardInfo)
-	//
+	shardInfo, _ := shardDynId(572594272428437758)
+	fmt.Println(shardInfo)
+
 	//Data := make(map[string]interface{})
 	//Data["topicId"] = int64(1)
 	//
@@ -77,35 +77,36 @@ func main() {
 	//score, err1 := strconv.ParseFloat(value, 64)
 	//fmt.Println(score)
 	//fmt.Println(err1)
+	//a := make([]*Stu,0)
+	//a = append(a, &Stu{Name: "hjx"})
+	//
+	//stus := &Stus{
+	//	List: a,
+	//}
+	//str,_ := json.Marshal(stus)
+	//fmt.Println(string(str))
+	//
+	//b := &Stus{}
+	//
+	//json.Unmarshal(str,b)
+	//fmt.Println(b.List[0])
+	//
+	//time.Now().Unix()
+	//
+	//fmt.Println("-------------------------------")
+	//fmt.Println(PubTime2Time(9235085924561356))
+	//fmt.Println(len("100000110011110100101000000000000000001111010001000101"))
+	//fmt.Println("-------------------------------")
+	//
+	//stus1 := []*Stu{
+	//	{Name: "1"}, {Name: "2"}, {Name: "3"},
+	//}
+	//bys,_ := json.Marshal(stus1)
+	//fmt.Println(string(bys))
 
-
-	a := make([]*Stu,0)
-	a = append(a, &Stu{Name: "hjx"})
-
-	stus := &Stus{
-		List: a,
-	}
-	str,_ := json.Marshal(stus)
-	fmt.Println(string(str))
-
-	b := &Stus{}
-
-	json.Unmarshal(str,b)
-	fmt.Println(b.List[0])
-
-	time.Now().Unix()
-
-	fmt.Println("-------------------------------")
-	fmt.Println(PubTime2Time(9235085924561356))
-	fmt.Println(len("100000110011110100101000000000000000001111010001000101"))
-	fmt.Println("-------------------------------")
-
-	stus1 := []*Stu{
-		{Name: "1"}, {Name: "2"}, {Name: "3"},
-	}
-	bys,_ := json.Marshal(stus1)
-	fmt.Println(string(bys))
-
+	avId, err := BvToAv("BV1WN4y147wW")
+	fmt.Println(avId)
+	fmt.Println(err)
 }
 
 const (
@@ -447,3 +448,63 @@ func removeUrl(subject string) string {
 	}
 	return sb.String()
 }
+
+
+// BvToAv bvid to avid
+func BvToAv(bvid string) (avid int64, err error) {
+	if bvid == "" {
+		err = fmt.Errorf("bvid is empty")
+		return
+	}
+	if len([]rune(bvid)) == 10 && strings.Index(bvid, "1") == 0 {
+		bvid = bvid[1:]
+	} else if len([]rune(bvid)) > 3 && strings.Index(strings.ToUpper(bvid[0:3]), _prefix) == 0 {
+		bvid = bvid[3:]
+	}
+	if len([]rune(bvid)) < 9 {
+		err = fmt.Errorf("bvid is too small")
+		return
+	}
+	// 位置转换
+	tmpStr := strings.Split(bvid, "")
+	tmp := tmpStr[1]
+	tmpStr[1] = tmpStr[4]
+	tmpStr[4] = tmp
+	tmp = tmpStr[0]
+	tmpStr[0] = tmpStr[6]
+	tmpStr[6] = tmp
+	bvid = strings.Join(tmpStr, "")
+	var tmpNum int64
+	for _, bs := range bvid {
+		index := strings.Index(_alphabet, string(bs))
+		if index == -1 {
+			err = fmt.Errorf("bvid(%s) is illegal, invalid char:%c", bvid, bs)
+			return
+		}
+		tmpNum = tmpNum*_base + int64(index)
+	}
+	if len(strconv.FormatInt(tmpNum, 2)) > 52 {
+		err = fmt.Errorf("bvid is too big")
+		return
+	} else if len(strconv.FormatInt(tmpNum, 2)) < 52 {
+		err = fmt.Errorf("bvid is too small")
+		return
+	}
+	avid = (tmpNum & _maskcode) ^ _xorcode
+	if avid < _minAid {
+		err = fmt.Errorf("bvid is too small")
+		return
+	}
+	return
+}
+
+const (
+	_xorcode          = 23442827791579
+	_maskcode         = 2251799813685247
+	_maxAid           = int64(1 << 51)
+	_maxAidBeforeMask = int64(1 << 52)
+	_minAid           = int64(1)
+	_base             = 58
+	_prefix           = "BV1"
+	_alphabet         = "FcwAPNKTMug3GV5Lj7EJnHpWsx4tb8haYeviqBz6rkCy12mUSDQX9RdoZf"
+)
