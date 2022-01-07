@@ -59,7 +59,7 @@ func main() {
 	//
 	//fmt.Println(s1)
 
-	shardInfo, _ := shardDynId(572594272428437758)
+	shardInfo, _ := shardDynId(599954579902142554)
 	fmt.Println(shardInfo)
 
 	//Data := make(map[string]interface{})
@@ -104,19 +104,53 @@ func main() {
 	//bys,_ := json.Marshal(stus1)
 	//fmt.Println(string(bys))
 
-	avId, err := BvToAv("BV1WN4y147wW")
-	fmt.Println(avId)
-	fmt.Println(err)
+	//avId, err := BvToAv("BV1WN4y147wW")
+	//fmt.Println(avId)
+	//fmt.Println(err)
+
+	//获取本地location
+	//toBeCharge := "2021-10-15 15:34:17"                             //待转化为时间戳的字符串 注意 这里的小时和分钟还要秒必须写 因为是跟着模板走的 修改模板的话也可以不写
+	//timeLayout := "2006-01-02 15:04:05"                             //转化所需模板
+	//loc, _ := time.LoadLocation("Local")                            //重要：获取时区
+	//theTime, _ := time.ParseInLocation(timeLayout, toBeCharge, loc) //使用模板在对应时区转化为time.time类型
+	//sr := theTime.Unix()                                            //转化为时间戳 类型是int64
+	//fmt.Println(theTime)                                            //打印输出theTime 2015-01-01 15:15:00 +0800 CST
+	//fmt.Println(sr)                                                 //打印输出时间戳 1420041600
+
+	////时间戳转日期
+	//dataTimeStr := time.Unix(sr, 0).Format(timeLayout) //设置时间戳 使用模板格式化为日期字符串
+	//fmt.Println(dataTimeStr)
+	//
+	//fmt.Sprintf("----------------")
+	//
+	//max,min := GetMaxAndMinPubTime(1633954673)
+	//fmt.Println(max)
+	//fmt.Println(min)
+	//
+	//fmt.Println(PubTime2Time(max))
+	//fmt.Println(PubTime2Time(min))
+
+	tNow := time.Now()
+	timeNow := tNow.Format("20060102")
+	fmt.Println(timeNow)
 }
 
 const (
-	PubTimeBaseTime = 1627747200 //2021年08月01日 00:00:00
+	//切记，这个不能修改!!!
+	PubTimeBaseTime = 1514736000 //2018-01-01 00:00:00
 )
 
 func PubTime2Time(pubTime int64) int64 {
-	ts := (pubTime >> 32) + PubTimeBaseTime
+	ts := (pubTime >> 21) + PubTimeBaseTime
 	return ts
 }
+
+func GetMaxAndMinPubTime(timeStamp int64) (maxPubTime int64, minPubTime int64) {
+	maxPubTime = (timeStamp-PubTimeBaseTime)<<21 | 0x00000000001FFFFF
+	minPubTime = (timeStamp - PubTimeBaseTime) << 21
+	return
+}
+
 
 type Stus struct {
 	List []*Stu `json:"list"`
@@ -143,7 +177,7 @@ func twoSum(nums []int, target int) []int {
 func shardDynId(dynamicID uint64) (shardInfo *ShardInfo, err error) {
 	ts := (dynamicID >> 32) + _timeStamp20170701
 	tm := time.Unix(int64(ts), 0)
-	fmt.Println("timestamp:", tm)
+	fmt.Println("timestamp:", tm.Unix())
 	shardInfo = &ShardInfo{
 		Year:  int32(tm.Year()),
 		Month: int32(tm.Month()),
