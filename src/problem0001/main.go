@@ -1,0 +1,417 @@
+package main
+
+import (
+	"crypto/md5"
+	"fmt"
+	"regexp"
+	"sort"
+	"strconv"
+	"strings"
+	"time"
+)
+
+const _timeStamp20170701 = 1498838400
+
+func main() {
+	/*	fmt.Println("======================")
+
+		fmt.Println(GetHash(31110987))
+
+		fmt.Println(time.Now().Unix())
+		fmt.Println("======================")
+
+		arr := []int64{12,323}
+
+		arrCombine := getAllGroupCombile(arr)
+		for _, item := range arrCombine {
+			fmt.Println(item)
+		}
+		fmt.Println("======================")*/
+
+	//str := "#小豆芽#测试纷纷xfessefxefs"
+	//fmt.Println("======================", len(str))
+	//fmt.Println(string(str[2]))
+	//topics, onlyHasTopic, textLen, err := DetectTopicsFromDynamicDesc(str)
+	//fmt.Println(topics)
+	//fmt.Println(onlyHasTopic)
+	//fmt.Println(textLen)
+	//fmt.Println(err)
+
+	//re:=regexp.MustCompile("[0-9]+")
+
+	//fmt.Println(re.FindAllString("txt_len < 30", 1))
+
+	//exp := "txt_len  30"
+	//regPattern := "[^()|&! +\\-*/%><=?:]+"
+	//regExec := regexp.MustCompile(regPattern)
+	//allStrings := regExec.FindAllString(exp, -1)
+	//fmt.Println(allStrings)
+	//
+	//type TN struct {
+	//	Mid int64
+	//	T1   []int64
+	//}
+	//
+	//s1 := new(TN)
+	//fmt.Println(s1)
+	//str := make([]byte, 0)
+	//json.Unmarshal(str,s1)
+	//
+	//fmt.Println(s1)
+
+	shardInfo, _ := shardDynId(599954579902142554)
+	fmt.Println(shardInfo)
+
+	//Data := make(map[string]interface{})
+	//Data["topicId"] = int64(1)
+	//
+	//topicCfgInfo := make(map[int64]map[string]interface{})
+	//topicPartitionAndKeywords := make(map[string]interface{})
+	//topicPartitionAndKeywords["topic_keyword_regpattern"] = "item.Keywords"
+	//topicPartitionAndKeywords["topic_name_regpattern"] = "item.NewTopicName"
+	//topicPartitionAndKeywords["topic_first_partition"] = "item.Partitions"
+	//topicCfgInfo[1] = topicPartitionAndKeywords
+	//
+	//
+	//value := ""
+	//score, err1 := strconv.ParseFloat(value, 64)
+	//fmt.Println(score)
+	//fmt.Println(err1)
+	//a := make([]*Stu,0)
+	//a = append(a, &Stu{Name: "hjx"})
+	//
+	//stus := &Stus{
+	//	List: a,
+	//}
+	//str,_ := json.Marshal(stus)
+	//fmt.Println(string(str))
+	//
+	//b := &Stus{}
+	//
+	//json.Unmarshal(str,b)
+	//fmt.Println(b.List[0])
+	//
+	//time.Now().Unix()
+	//
+	//fmt.Println("-------------------------------")
+	//fmt.Println(PubTime2Time(9235085924561356))
+	//fmt.Println(len("100000110011110100101000000000000000001111010001000101"))
+	//fmt.Println("-------------------------------")
+	//
+	//stus1 := []*Stu{
+	//	{Name: "1"}, {Name: "2"}, {Name: "3"},
+	//}
+	//bys,_ := json.Marshal(stus1)
+	//fmt.Println(string(bys))
+
+	//avId, err := BvToAv("BV1WN4y147wW")
+	//fmt.Println(avId)
+	//fmt.Println(err)
+
+	//获取本地location
+	//toBeCharge := "2021-10-15 15:34:17"                             //待转化为时间戳的字符串 注意 这里的小时和分钟还要秒必须写 因为是跟着模板走的 修改模板的话也可以不写
+	//timeLayout := "2006-01-02 15:04:05"                             //转化所需模板
+	//loc, _ := time.LoadLocation("Local")                            //重要：获取时区
+	//theTime, _ := time.ParseInLocation(timeLayout, toBeCharge, loc) //使用模板在对应时区转化为time.time类型
+	//sr := theTime.Unix()                                            //转化为时间戳 类型是int64
+	//fmt.Println(theTime)                                            //打印输出theTime 2015-01-01 15:15:00 +0800 CST
+	//fmt.Println(sr)                                                 //打印输出时间戳 1420041600
+
+	////时间戳转日期
+	//dataTimeStr := time.Unix(sr, 0).Format(timeLayout) //设置时间戳 使用模板格式化为日期字符串
+	//fmt.Println(dataTimeStr)
+	//
+	//fmt.Sprintf("----------------")
+	//
+	//max,min := GetMaxAndMinPubTime(1633954673)
+	//fmt.Println(max)
+	//fmt.Println(min)
+	//
+	//fmt.Println(PubTime2Time(max))
+	//fmt.Println(PubTime2Time(min))
+
+	tNow := time.Now()
+	timeNow := tNow.Format("20060102")
+	fmt.Println(timeNow)
+}
+
+const (
+	//切记，这个不能修改!!!
+	PubTimeBaseTime = 1514736000 //2018-01-01 00:00:00
+)
+
+func PubTime2Time(pubTime int64) int64 {
+	ts := (pubTime >> 21) + PubTimeBaseTime
+	return ts
+}
+
+func GetMaxAndMinPubTime(timeStamp int64) (maxPubTime int64, minPubTime int64) {
+	maxPubTime = (timeStamp-PubTimeBaseTime)<<21 | 0x00000000001FFFFF
+	minPubTime = (timeStamp - PubTimeBaseTime) << 21
+	return
+}
+
+
+type Stus struct {
+	List []*Stu `json:"list"`
+}
+
+type Stu struct {
+	Name string `json:"name"`
+	Age  string `json:"age"`
+}
+
+func twoSum(nums []int, target int) []int {
+	hash := make(map[int]int)
+
+	for index, v := range nums {
+		value, ok := hash[target-v]
+		if ok {
+			return []int{value, index}
+		}
+		hash[v] = index
+	}
+	return []int{}
+}
+
+func shardDynId(dynamicID uint64) (shardInfo *ShardInfo, err error) {
+	ts := (dynamicID >> 32) + _timeStamp20170701
+	tm := time.Unix(int64(ts), 0)
+	fmt.Println("timestamp:", tm.Unix())
+	shardInfo = &ShardInfo{
+		Year:  int32(tm.Year()),
+		Month: int32(tm.Month()),
+		Rand:  (dynamicID & 0xffffffff) >> 20,
+	}
+	return
+}
+
+
+type ShardInfo struct {
+	Year  int32
+	Month int32
+	Rand  uint64
+}
+
+type ExpiredTs struct {
+	ExpiredTs int64 `json:"ex_ts"`
+}
+
+func GetHash(mid int64) int32 {
+	midStr := fmt.Sprintf("%d", mid)
+	bys := md5.Sum([]byte(midStr))
+	fmt.Println(len(bys))
+
+	h := uint32(0)
+	for _, by := range bys {
+		h *= 16777619
+		h ^= uint32(by)
+	}
+	return int32(h % 10)
+}
+
+func getAllGroupCombile(groupTopicIds []int64) (groupIdCombine []string) {
+	//两个话题关联
+	groupIdCombine = make([]string, 0)
+	if len(groupTopicIds) == 0 {
+		return
+	}
+	sort.Slice(groupTopicIds, func(i, j int) bool { return groupTopicIds[i] < groupTopicIds[j] })
+	//三个话题关联
+	groupIdCombine = make([]string, 0)
+	if len(groupTopicIds) >= 2 {
+		i, j := 0, 0
+		for i < len(groupTopicIds) {
+			j = i + 1
+			for j < len(groupTopicIds) {
+				groupIdCombine = append(groupIdCombine, strings.Join([]string{fmt.Sprintf("%d", groupTopicIds[i]),
+					fmt.Sprintf("%d", groupTopicIds[j])}, ","))
+				j++
+			}
+			i++
+		}
+	}
+	if len(groupTopicIds) >= 3 {
+		i, j, k := 0, 0, 0
+		for i < len(groupTopicIds) {
+			j = i + 1
+			for j < len(groupTopicIds) {
+				k = j + 1
+				for k < len(groupTopicIds) {
+					groupIdCombine = append(groupIdCombine, strings.Join([]string{fmt.Sprintf("%d", groupTopicIds[i]),
+						fmt.Sprintf("%d", groupTopicIds[j]),
+						fmt.Sprintf("%d", groupTopicIds[k])},
+						","))
+					k++
+				}
+				j++
+			}
+			i++
+		}
+	}
+	return
+}
+
+const (
+	DETECT_STATE_RESTART = iota
+	DETECT_STATE_START_DETECT
+	DETECT_STATE_IN_TOPIC
+	DETECT_STATE_END_DETECT
+)
+
+func DetectTopicsFromDynamicDesc(desc string) (topics []string, onlyHasTopic bool, textLen int32, err error) {
+	ts, onlyHasTopic, textLen, err := scan(desc)
+	if err != nil {
+		return
+	}
+	// 去重
+	unique := make(map[string]struct{})
+	for _, topic := range ts {
+		unique[topic] = struct{}{}
+	}
+	for topic := range unique {
+		topics = append(topics, topic)
+	}
+	return
+}
+
+func scan(desc string) (topics []string, onlyHasTopic bool, textLen int32, err error) {
+	var (
+		start  int
+		end    int
+		length int
+		state  = DETECT_STATE_RESTART
+
+		textStart int
+	)
+	onlyHasTopic = true
+	desc = removeUrl(desc)
+
+	textArrExcluedTag := make([]string, 0)
+	i := 0
+	for i = 0; i < len(desc); {
+		c := desc[i]
+		state = detect(c, state, &onlyHasTopic)
+
+		if state == DETECT_STATE_START_DETECT {
+			start = i + 1
+			length = 0
+			if textStart <= i-1 {
+				textArrExcluedTag = append(textArrExcluedTag, trim(desc[textStart:i]))
+			}
+		}
+		if state == DETECT_STATE_IN_TOPIC {
+			length++
+			if length > 32 {
+				state = DETECT_STATE_RESTART
+				textStart = i
+			}
+		}
+		if state == DETECT_STATE_END_DETECT {
+			end = i
+			candidate := trim(desc[start:end])
+			if len(candidate) > 0 {
+				topics = append(topics, candidate)
+			} else {
+				state = DETECT_STATE_START_DETECT
+				start = i + 1
+				length = 0
+			}
+			textStart = i + 1
+		}
+		if state == DETECT_STATE_RESTART {
+			if i == len(desc)-1 {
+				textArrExcluedTag = append(textArrExcluedTag, trim(desc[textStart:]))
+			}
+		}
+		if c <= 0x7f {
+			i += 1
+		} else if c < 0xc0 {
+			return
+		} else if c < 0xe0 {
+			i += 2
+			if i == len(desc) && state == DETECT_STATE_RESTART {
+				fmt.Println("i+2")
+				textArrExcluedTag = append(textArrExcluedTag, trim(desc[textStart:]))
+			}
+		} else if c < 0xf0 {
+			i += 3
+			if i == len(desc) && state == DETECT_STATE_RESTART {
+				fmt.Println("i+3")
+				textArrExcluedTag = append(textArrExcluedTag, trim(desc[textStart:]))
+			}
+		} else {
+			if len(desc) < i+4 {
+				return
+			}
+			isEmoji := false
+			// emoji in [\xF0\x9F\x98\x81, \xF0\x9F\x98\xBF] or [\xF0\x9F\x99\x80, \xF0\x9F\x99\x8F]
+			if c == 0xf0 && desc[i+1] == 0x9f {
+				if desc[i+2] == 0x98 {
+					if desc[i+3] >= 0x81 && desc[i+3] <= 0xbf {
+						isEmoji = true
+					}
+				} else if desc[i+2] == 0x99 {
+					if desc[i+3] >= 0x80 && desc[i+3] <= 0x8f {
+						isEmoji = true
+					}
+				}
+			}
+			if isEmoji {
+				state = DETECT_STATE_RESTART
+			}
+			i += 4
+			if i == len(desc) && state == DETECT_STATE_RESTART {
+				fmt.Println("i+4")
+				textArrExcluedTag = append(textArrExcluedTag, trim(desc[textStart:]))
+			}
+		}
+	}
+
+	fmt.Println(textArrExcluedTag)
+	for _, item := range textArrExcluedTag {
+		words := ([]rune)(item)
+		textLen += int32(len(words))
+	}
+	return
+}
+
+func detect(c uint8, enterState int, onlyHasTopic *bool) (exitState int) {
+	nextState := DETECT_STATE_RESTART
+	if (enterState == DETECT_STATE_RESTART || enterState == DETECT_STATE_END_DETECT) &&
+		c != 0x23 && c != 0x20 && c != 0x0a {
+		*onlyHasTopic = false
+	}
+	if c == 0x40 || c == 0x0a {
+		return DETECT_STATE_RESTART
+	}
+	switch enterState {
+	case DETECT_STATE_RESTART:
+		if c == 0x23 {
+			nextState = DETECT_STATE_START_DETECT
+		} else {
+			nextState = DETECT_STATE_RESTART
+		}
+	case DETECT_STATE_START_DETECT:
+		if c == 0x23 {
+			nextState = DETECT_STATE_START_DETECT
+		} else {
+			nextState = DETECT_STATE_IN_TOPIC
+		}
+	case DETECT_STATE_IN_TOPIC:
+		if c == 0x23 {
+			nextState = DETECT_STATE_END_DETECT
+		} else {
+			nextState = DETECT_STATE_IN_TOPIC
+		}
+	case DETECT_STATE_END_DETECT:
+		if c == 0x23 {
+			nextState = DETECT_STATE_START_DETECT
+		} else {
+			nextState = DETECT_STATE_RESTART
+		}
+	default:
+
+	}
+	return nextState
+}
