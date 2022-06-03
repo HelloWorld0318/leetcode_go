@@ -5,7 +5,7 @@ type ListNode struct {
 	Next *ListNode
 }
 
-func hasCycle(head *ListNode) bool {
+func hasCycle1(head *ListNode) bool {
 	hasVisitNode := make(map[*ListNode]bool)
 	for head != nil {
 		if hasVisitNode[head] {
@@ -13,6 +13,22 @@ func hasCycle(head *ListNode) bool {
 		}
 		hasVisitNode[head] = true
 		head = head.Next
+	}
+	return false
+}
+
+func hasCycle(head *ListNode) bool {
+	fast, slow := head, head
+	for fast != nil {
+		slow = slow.Next
+		fast = fast.Next
+		if fast == nil {
+			return false
+		}
+		fast = fast.Next
+		if slow == fast {
+			return true
+		}
 	}
 	return false
 }
