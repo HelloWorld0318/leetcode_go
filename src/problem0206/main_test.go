@@ -52,7 +52,7 @@ func Test_reverseList(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := reverseListMethod2(tt.args.head)
+			got := reverseList(tt.args.head)
 			for got != nil {
 				fmt.Println(got.Val)
 				got = got.Next

@@ -46,3 +46,19 @@ func reverseListMethod2(head *ListNode) *ListNode {
 	}
 	return newHead
 }
+
+func reverseList(head *ListNode) *ListNode {
+	//递归的结束条件
+	if head == nil || head.Next == nil {
+		return head
+	}
+	newHead := reverseList(head.Next)
+	cur := newHead
+	for cur.Next != nil {
+		cur = cur.Next
+	}
+	//把head节点放到最后
+	cur.Next = head
+	head.Next = nil
+	return newHead
+}
