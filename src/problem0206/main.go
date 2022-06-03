@@ -75,6 +75,7 @@ func reverseList(head *ListNode) *ListNode {
 		head.Next = newHead
 		//3.移动head和newHead
 		newHead = head
+		//遍历链表
 		head = next
 	}
 	return newHead
