@@ -13,8 +13,8 @@ type ListNode struct {
 	Next *ListNode
 }
 
-//
-func reverseList(head *ListNode) *ListNode {
+//非递归的方法
+func reverseListMethod1(head *ListNode) *ListNode {
 	if head == nil || head.Next == nil {
 		return head
 	}
@@ -29,4 +29,20 @@ func reverseList(head *ListNode) *ListNode {
 		next = cur.Next
 	}
 	return dumpy.Next
+}
+
+//非递归的方法
+func reverseListMethod2(head *ListNode) *ListNode {
+	if head == nil || head.Next == nil {
+		return head
+	}
+	newHead, next := head, head.Next
+	for next != nil {
+		head.Next = next.Next
+		next.Next = newHead
+		newHead = next
+
+		next = head.Next
+	}
+	return newHead
 }
