@@ -18,8 +18,8 @@ func mergeKListsRange(lists []*ListNode, start, end int) *ListNode {
 	}
 	mid := (start + end) / 2
 	left := mergeKListsRange(lists, start, mid)
-	rigit := mergeKListsRange(lists, mid+1, end)
-	return mergeTwoList(left, rigit)
+	right := mergeKListsRange(lists, mid+1, end)
+	return mergeTwoList(left, right)
 }
 
 func mergeTwoList(headA *ListNode, headB *ListNode) *ListNode {
