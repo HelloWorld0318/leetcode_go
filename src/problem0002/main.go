@@ -22,7 +22,7 @@ func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
 		if sum >= 10 {
 			sum -= 10
 			carry = 1
-		} else {
+		} else if carry > 1 {
 			carry = 0
 		}
 		node := &ListNode{
