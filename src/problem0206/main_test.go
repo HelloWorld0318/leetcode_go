@@ -57,6 +57,8 @@ func Test_reverseList(t *testing.T) {
 				fmt.Println(got.Val)
 				got = got.Next
 			}
+			str := "abba"
+			fmt.Println(string(str[0]))
 		})
 	}
 }
