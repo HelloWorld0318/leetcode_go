@@ -1,6 +1,7 @@
 package problem0198
 
 func rob(nums []int) int {
+	//dp[i] = max{dp[i-1],dp[i-2]+nums[i]};(i>=3)
 	dp, i := make([]int, len(nums)), 0
 	for i < len(nums) {
 		if i == 0 {
