@@ -10,9 +10,12 @@ func coinChange(coins []int, amount int) int {
 
 	//状态i可由状态i-1、i-2、i-5、i-7、i-10，5个状态所转移，故
 	//dp[i]=min(dp[i-1],dp[i-2],dp[i-5],dp[i-7],dp[i-10])+1
+
+	//dp[i]表示金额为i的时候最小值
 	dp := make([]int, amount+1)
 	i, j := 0, 0
 	for i < len(dp) {
+		//初始化数据，所有金额都无法可达
 		dp[i] = -1
 		i++
 	}
