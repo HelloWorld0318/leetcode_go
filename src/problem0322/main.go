@@ -1,5 +1,6 @@
 package problem0322
 
+//其实是一个背包的问题
 func coinChange(coins []int, amount int) int {
 	//https://leetcode.com/problems/coin-change/
 	//假如数组coins=[1,2,5,7,10],在计算dp[i]时，dp[0],dp[1],dp[2],...,dp[i-1]都是已知的：
