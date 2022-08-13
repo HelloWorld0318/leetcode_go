@@ -6,6 +6,7 @@ func lengthOfLIS(nums []int) int {
 		return 0
 	}
 	//dp[i]究竟应该怎么定义?以nums[i]结尾的最长递增子序列，和最大子序列和相似之处
+	//第i个状态dp[i]代表以第i个元素结尾的最长上升子序列的长度
 	dp := make([]int, len(nums))
 	i := 0
 	dp[0] = 1
