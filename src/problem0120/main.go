@@ -4,6 +4,7 @@ func minimumTotal(triangle [][]int) int {
 	//1.从上到下或者从下到上的寻找路径的思考方式本质是一样的吗？
 	//2.假设dp[i][j]代表了数组三角形第i行，第j列的最优解，从上到下与从下到上的哪种方式递推更容易？（更少的边界调节）
 
+	//从下到上的思考方式
 	row, i := len(triangle), 0
 	if row == 1 {
 		res := triangle[0][0]
