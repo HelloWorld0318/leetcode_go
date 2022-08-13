@@ -43,6 +43,7 @@ func lengthOfLISII(nums []int) int {
 			stack = append(stack, nums[i])
 		} else {
 			j := 0
+			//可以用二分查找优化一下
 			for j < len(stack) {
 				if stack[j] >= nums[i] {
 					stack[j] = nums[i]
