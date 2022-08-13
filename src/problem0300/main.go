@@ -42,10 +42,14 @@ func lengthOfLISII(nums []int) int {
 		if stack[len(stack)-1] < nums[i] {
 			stack = append(stack, nums[i])
 		} else {
-			if len(stack) != 0 && stack[len(stack)-1] >= nums[i] {
-				stack = stack[:len(stack)-1]
+			j := 0
+			for j < len(stack) {
+				if stack[j] >= nums[i] {
+					stack[j] = nums[i]
+					break
+				}
+				j++
 			}
-			stack = append(stack, nums[i])
 		}
 		i++
 	}
