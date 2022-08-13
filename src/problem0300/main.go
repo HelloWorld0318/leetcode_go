@@ -32,5 +32,22 @@ func lengthOfLIS(nums []int) int {
 
 //O(n*log(n))
 func lengthOfLISII(nums []int) int {
-	return 0
+	if len(nums) == 0 {
+		return 0
+	}
+	stack := make([]int, 0)
+	stack = append(stack, nums[0])
+	i := 1
+	for i < len(nums) {
+		if stack[len(stack)-1] < nums[i] {
+			stack = append(stack, nums[i])
+		} else {
+			if len(stack) != 0 && stack[len(stack)-1] >= nums[i] {
+				stack = stack[:len(stack)-1]
+			}
+			stack = append(stack, nums[i])
+		}
+		i++
+	}
+	return len(stack)
 }
