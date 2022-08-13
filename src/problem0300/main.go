@@ -56,3 +56,44 @@ func lengthOfLISII(nums []int) int {
 	}
 	return len(stack)
 }
+
+func lengthOfLISIII(nums []int) int {
+	if len(nums) == 0 {
+		return 0
+	}
+	stack := make([]int, 0)
+	stack = append(stack, nums[0])
+	i := 1
+	for i < len(nums) {
+		if nums[i] > stack[len(stack)-1] {
+			stack = append(stack, nums[i])
+		} else {
+			pos := binarySearch(stack, nums[i])
+			stack[pos] = nums[i]
+		}
+		i++
+	}
+	return len(stack)
+}
+
+func binarySearch(nums []int, target int) (index int) {
+	index = -1
+	begin, end := 0, len(nums)-1
+	for index == -1 {
+		mid := (begin + end) / 2
+		if nums[mid] == target {
+			index = mid
+		} else if nums[mid] > target {
+			if mid == 0 || nums[mid-1] < target {
+				index = mid
+			}
+			end = mid - 1
+		} else {
+			if mid == len(nums)-1 || nums[mid+1] > target {
+				index = mid + 1
+			}
+			begin = mid + 1
+		}
+	}
+	return index
+}
