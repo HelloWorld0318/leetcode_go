@@ -1,6 +1,11 @@
 package problem0174
 
 func calculateMinimumHP(dungeon [][]int) int {
+	//若代表地牢的二维数组为1*n或者n*1的：
+	//1*n，i从n-2到0：
+	//dp[0][i] = max{1,dp[0][i+1]-dungeon[0][i]}
+	//n*1，i从n-2到0
+	//dp[i][0] = max{1,dp[i+1][0]-dungeon[i][0]}
 	if len(dungeon) == 0 {
 		return 0
 	}
