@@ -6,6 +6,9 @@ func calculateMinimumHP(dungeon [][]int) int {
 	//dp[0][i] = max{1,dp[0][i+1]-dungeon[0][i]}
 	//n*1，i从n-2到0
 	//dp[i][0] = max{1,dp[i+1][0]-dungeon[i][0]}
+
+	//dpMin = min{dp[i+1][j],dp[i][j+1]}
+	//dp[i][j] = max{1,dpMin-dungeon[i][j]}
 	if len(dungeon) == 0 {
 		return 0
 	}
