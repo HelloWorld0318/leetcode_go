@@ -10,22 +10,22 @@ func ladderLength(beginWord, endWord string, wordList []string) int {
 }
 
 func bfs(beginWord, endWord string, graph *map[string][]string) int {
-	queue := make([]*Pair, 0)
-	queue = append(queue, &Pair{Word: beginWord, Step: 1})
+	queue := make([]*WordNode, 0)
+	queue = append(queue, &WordNode{Word: beginWord, Step: 1})
 	hasVisited := make(map[string]bool)
 	for len(queue) != 0 {
-		pair := queue[0]
+		wordNode := queue[0]
 		queue = queue[1:]
-		step := pair.Step
-		hasVisited[pair.Word] = true
+		step := wordNode.Step
+		hasVisited[wordNode.Word] = true
 
-		if pair.Word == endWord {
+		if wordNode.Word == endWord {
 			return step
 		}
-		if wordList, ok := (*graph)[pair.Word]; ok {
+		if wordList, ok := (*graph)[wordNode.Word]; ok {
 			for _, word := range wordList {
 				if !hasVisited[word] {
-					queue = append(queue, &Pair{Word: word, Step: step + 1})
+					queue = append(queue, &WordNode{Word: word, Step: step + 1})
 				}
 			}
 		}
@@ -64,7 +64,7 @@ func isConnection(word1, word2 string) bool {
 	return differentChar == 1
 }
 
-type Pair struct {
+type WordNode struct {
 	Word string
 	Step int
 }
