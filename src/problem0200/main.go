@@ -5,6 +5,11 @@ var (
 	dy = []int{0, 0, 1, -1}
 )
 
+//求地图中岛屿的数量
+//1.设置岛屿数量numOfLands=0
+//2.设置mark数组，并初始化
+//3.遍历地图grid的上所有的点，如果当前点是陆地，且未被访问过（mark[i][j]=0）,调用搜索接口search(grid,mark,i,j)
+//search可以是DFS或者BFS，完成搜索后numOfLands++
 func numIslands(grid [][]byte) int {
 	numOfLands := 0
 	if len(grid) == 0 {
