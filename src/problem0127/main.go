@@ -14,6 +14,7 @@ func bfs(beginWord, endWord string, graph *map[string][]string) int {
 	queue = append(queue, &WordNode{Word: beginWord, Step: 1})
 	hasVisited := make(map[string]bool)
 	for len(queue) != 0 {
+		//出队列的时候才算访问过
 		wordNode := queue[0]
 		queue = queue[1:]
 		step := wordNode.Step
